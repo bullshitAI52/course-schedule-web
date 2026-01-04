@@ -1,0 +1,909 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.title-section {
+    flex: 1;
+}
+
+.timetable-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50;
+    border: none;
+    background: transparent;
+    padding: 5px 10px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s;
+    width: 300px;
+}
+
+.timetable-title:focus {
+    outline: none;
+    border-bottom-color: #007bff;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn.small {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn.primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn.primary:hover {
+    background: #0056b3;
+}
+
+.btn.secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn.secondary:hover {
+    background: #545b62;
+}
+
+.btn.tertiary {
+    background: #28a745;
+    color: white;
+}
+
+.btn.tertiary:hover {
+    background: #1e7e34;
+}
+
+.btn.danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn.danger:hover {
+    background: #c82333;
+}
+
+
+
+.main-content {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+}
+
+.subject-pool {
+    background: white;
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: fit-content;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.period-controls {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.period-controls h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.period-controls .period-control-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.period-controls .period-control-line:last-child {
+    margin-bottom: 0;
+}
+
+.period-controls .period-control-line span {
+    color: #495057;
+    font-weight: 600;
+}
+
+.period-controls .period-control-line .btn.small {
+    padding: 4px 8px;
+    min-width: 24px;
+    height: 24px;
+    font-size: 13px;
+    border-radius: 4px;
+    margin-left: 4px;
+}
+
+.subject-pool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.subject-pool h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.subjects {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.subject-card {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: grab;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.subject-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.subject-card:active {
+    cursor: grabbing;
+}
+
+.subject-card.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    transform: rotate(5deg);
+}
+
+.subject-info {
+    flex: 1;
+}
+
+.subject-info .subject-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.subject-info .teacher-name {
+    font-size: 12px;
+    color: #666;
+}
+
+.subject-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: 8px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 50%;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 2px;
+}
+
+.btn-icon:hover {
+    transform: scale(1.1);
+}
+
+.edit-btn {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.edit-btn:hover {
+    background-color: #bbdefb;
+    box-shadow: 0 2px 4px rgba(25, 118, 210, 0.3);
+}
+
+.delete-btn {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.delete-btn:hover {
+    background-color: #ffcdd2;
+    box-shadow: 0 2px 4px rgba(211, 47, 47, 0.3);
+}
+
+.timetable-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.timetable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.timetable th,
+.timetable td {
+    border: 1px solid #dee2e6;
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.timetable th {
+    background: #f8f9fa;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.time-header {
+    width: 60px;
+}
+
+.period-header {
+    width: 80px;
+}
+
+.section-header .section-title {
+    background: #e9ecef;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px;
+}
+
+.section-controls {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+.timetable-title-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.table-title-input {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    background: transparent;
+    padding: 8px 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 300px;
+    color: #333;
+}
+
+.table-title-input:focus {
+    background: rgba(0, 123, 255, 0.05);
+    border-radius: 4px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group span {
+    font-weight: bold;
+    min-width: 50px;
+}
+
+.btn.danger {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.btn.danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.time-cell {
+    background: #f8f9fa;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #495057;
+    text-align: center;
+    vertical-align: middle;
+    border-right: 1px solid #dee2e6;
+    width: 40px;
+    min-width: 40px;
+}
+
+.vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+    line-height: 1.2;
+    letter-spacing: 2px;
+}
+
+.period-cell {
+    background: #f8f9fa;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.time-display {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.time-display:hover {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.section-row {
+    background: #e9ecef;
+    font-weight: 600;
+    text-align: center;
+}
+
+.section-row td {
+    padding: 8px;
+    font-size: 16px;
+}
+
+.cell {
+    width: 120px;
+    height: 80px;
+    position: relative;
+    transition: all 0.3s ease;
+    background: white;
+    border: 1px solid #dee2e6;
+}
+
+.cell:hover {
+    background: #f8f9fa;
+}
+
+.cell.drag-over {
+    background: #e3f2fd;
+    border: 2px dashed #2196f3;
+}
+
+.cell.occupied {
+    cursor: default;
+}
+
+.cell-content {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+    position: relative;
+}
+
+.delete-cell-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #dc3545;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+.cell:hover .delete-cell-btn {
+    display: flex;
+}
+
+.delete-cell-btn:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.1);
+}
+
+.cell-content .subject-name {
+    font-size: 14px;
+    margin-bottom: 2px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.cell-content .teacher-name {
+    font-size: 11px;
+    opacity: 0.9;
+    text-align: center;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 6px;
+    padding: 30px;
+    min-width: 400px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.color-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.preset-colors {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.color-option:hover,
+.color-option.selected {
+    border-color: #333;
+    transform: scale(1.1);
+}
+
+.custom-color {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.custom-color input[type="color"] {
+    width: 50px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.custom-color input[type="text"] {
+    flex: 1;
+    max-width: 100px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 15mm 10mm;
+    }
+    
+    /* 高级打印优化 - 强制彩色打印 */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        box-sizing: border-box !important;
+        -webkit-filter: none !important;
+        filter: none !important;
+    }
+    
+    body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", serif !important;
+        line-height: 1.4 !important;
+    }
+    
+    /* 隐藏控制元素 */
+    .header, .subject-pool, .section-controls {
+        display: none !important;
+    }
+    
+    /* 隐藏标题区域 */
+    .timetable-title-section {
+        display: none !important;
+    }
+    
+    .table-title-input {
+        display: none !important;
+    }
+    
+    /* 强化表格边框 */
+    .timetable {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 0 auto !important;
+        border: 2px solid #000 !important;
+        font-size: 13px !important;
+        table-layout: fixed !important;
+        background: white !important;
+    }
+    
+    .timetable thead {
+        display: table-header-group !important;
+    }
+    
+    /* 优化表头打印效果 */
+    .timetable th {
+        background: #f5f5f5 !important;
+        color: #000 !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        padding: 12px 8px !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        border: 1px solid #000 !important;
+        border-bottom: 2px solid #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .timetable th:first-child,
+    .timetable th:nth-child(2) {
+        background: #e8e8e8 !important;
+        color: #000 !important;
+    }
+    
+    /* 强化单元格边框 */
+    .timetable td {
+        border: 1px solid #000 !important;
+        border-bottom: 1px solid #000 !important;
+        border-right: 1px solid #000 !important;
+        padding: 8px 4px !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        background: white !important;
+    }
+    
+    /* 确保所有边框可见 */
+    .timetable tr {
+        border-bottom: 1px solid #000 !important;
+    }
+    
+    .timetable tbody tr:last-child td {
+        border-bottom: 2px solid #000 !important;
+    }
+    
+    /* 时间列样式 */
+    .time-header {
+        width: 50px !important;
+        background: linear-gradient(135deg, #34495e, #2c3e50) !important;
+        color: white !important;
+        font-weight: 600 !important;
+    }
+    
+    .period-header {
+        width: 75px !important;
+        background: linear-gradient(135deg, #34495e, #2c3e50) !important;
+        color: white !important;
+        font-weight: 600 !important;
+    }
+    
+    /* 优化时间单元格打印 */
+    .time-cell {
+        width: 40px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #000 !important;
+        background: #ffffff !important;
+        border: 1px solid #000 !important;
+        padding: 8px 4px !important;
+        white-space: nowrap !important;
+        line-height: 1.3 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* 优化节数单元格打印 */
+    .period-cell {
+        white-space: nowrap !important;
+        line-height: 1.4 !important;
+        background: #ffffff !important;
+        border: 1px solid #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .period-name {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #000 !important;
+        margin-bottom: 3px !important;
+        white-space: nowrap !important;
+    }
+    
+    .time-display {
+        font-size: 10px !important;
+        color: #333 !important;
+        font-weight: 500 !important;
+    }
+    
+    /* 强化课程单元格边框 - 支持彩色 */
+    .cell {
+        height: 65px !important;
+        width: 105px !important;
+        border: 1px solid #000 !important;
+        background: white !important;
+        box-sizing: border-box !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        -webkit-filter: none !important;
+        filter: none !important;
+    }
+    
+    .cell-content {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 4px !important;
+        border: 1px solid #000 !important;
+        box-sizing: border-box !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        -webkit-filter: none !important;
+        filter: none !important;
+    }
+    
+    .cell-content .subject-name {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        line-height: 1.4 !important;
+        margin-bottom: 2px !important;
+        text-align: center !important;
+        color: #000 !important;
+    }
+    
+    .cell-content .teacher-name {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+        text-align: center !important;
+        color: #333 !important;
+        font-weight: 500 !important;
+    }
+    
+    .delete-cell-btn {
+        display: none !important;
+    }
+    
+    /* 强制显示所有边框 */
+    .timetable * {
+        border-color: #000 !important;
+    }
+    
+    /* 优化彩色打印模式 */
+    .timetable th {
+        background: #e6f3ff !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        -webkit-filter: none !important;
+        filter: none !important;
+    }
+    
+    .timetable th:first-child,
+    .timetable th:nth-child(2) {
+        background: #f0f0f0 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        -webkit-filter: none !important;
+        filter: none !important;
+    }
+    
+    /* 周一到周五表头彩色背景 */
+    .timetable th:nth-child(n+3) {
+        background: #fff2e6 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        -webkit-filter: none !important;
+        filter: none !important;
+    }
+    
+    /* 优化黑白打印模式 */
+    .bw-mode .timetable th {
+        background: #e8e8e8 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .bw-mode .timetable td {
+        border: 1px solid #000 !important;
+        background: white !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .bw-mode .cell {
+        background: white !important;
+        border: 1px solid #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+
+
+
+
+
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .subject-pool {
+        order: 2;
+    }
+    
+    .timetable-container {
+        order: 1;
+    }
+    
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .controls {
+        justify-content: center;
+    }
+    
+    .timetable {
+        font-size: 12px;
+    }
+    
+    .cell {
+        width: 80px;
+        height: 60px;
+    }
+}
+
+.bw-mode .cell-content {
+    filter: grayscale(100%);
+}

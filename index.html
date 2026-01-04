@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程表工具</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="title-section">
+                <input type="text" id="timetableTitle" class="timetable-title" value="我的课程表" placeholder="请输入课程表名称" readonly style="cursor: default;">
+            </div>
+            <div class="controls">
+                <button id="tutorialBtn" class="btn danger">查看教程</button>
+                <button id="resetBtn" class="btn secondary">重置课表</button>
+                <button id="saveImageBtn" class="btn tertiary">保存图片</button>
+                <button id="exportWordBtn" class="btn tertiary">导出Word</button>
+                <button id="exportExcelBtn" class="btn tertiary">导出Excel</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="subject-pool">
+                <div class="period-controls">
+                    <div class="period-control-line">
+                        <span>上午节数</span>
+                        <button id="addMorningBtn" class="btn small">+</button>
+                        <button id="removeMorningBtn" class="btn small danger">-</button>
+                    </div>
+                    <div class="period-control-line">
+                        <span>下午节数</span>
+                        <button id="addAfternoonBtn" class="btn small">+</button>
+                        <button id="removeAfternoonBtn" class="btn small danger">-</button>
+                    </div>
+                </div>
+                <div class="subject-pool-header">
+                    <h3>科目池</h3>
+                    <button id="addSubjectBtn" class="btn primary">+ 科目</button>
+                </div>
+                <div id="subjectPool" class="subjects">
+                    <!-- 科目卡片将在这里动态生成 -->
+                </div>
+            </div>
+
+            <div class="timetable-container">
+                <div class="timetable-title-section">
+                    <input type="text" id="tableTitle" class="table-title-input" value="周一到周五课程表" placeholder="请输入课程表名称">
+                </div>
+                <table class="timetable" id="timetable">
+                    <thead>
+                        <tr>
+                            <th class="time-header">时间</th>
+                            <th class="period-header">节数</th>
+                            <th>周一</th>
+                            <th>周二</th>
+                            <th>周三</th>
+                            <th>周四</th>
+                            <th>周五</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetableBody">
+                        <!-- 动态生成的内容 -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- 科目编辑弹窗 -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <h3>科目设置</h3>
+            <form id="subjectForm">
+                <div class="form-group">
+                    <label>科目名称</label>
+                    <input type="text" id="subjectName" required>
+                </div>
+                <div class="form-group">
+                    <label>老师姓名</label>
+                    <input type="text" id="teacherName" placeholder="可选">
+                </div>
+                <div class="form-group">
+                    <label>颜色</label>
+                    <div class="color-options">
+                        <div class="preset-colors">
+                            <div class="color-option" data-color="#FF0000" style="background: #FF0000" title="红色"></div>
+                            <div class="color-option" data-color="#0000FF" style="background: #0000FF" title="蓝色"></div>
+                            <div class="color-option" data-color="#FF69B4" style="background: #FF69B4" title="粉色"></div>
+                            <div class="color-option" data-color="#FFA500" style="background: #FFA500" title="橙色"></div>
+                            <div class="color-option" data-color="#800080" style="background: #800080" title="紫色"></div>
+                            <div class="color-option" data-color="#B8860B" style="background: #B8860B" title="深金色"></div>
+                            <div class="color-option" data-color="#FF4500" style="background: #FF4500" title="橙红色"></div>
+                            <div class="color-option" data-color="#808080" style="background: #808080" title="灰色"></div>
+                            <div class="color-option" data-color="#663399" style="background: #663399" title="深紫色"></div>
+                            <div class="color-option" data-color="#006400" style="background: #006400" title="深绿色"></div>
+                            <div class="color-option" data-color="#000080" style="background: #000080" title="深蓝色"></div>
+                            <div class="color-option" data-color="#4B0082" style="background: #4B0082" title="靛蓝色"></div>
+                            <div class="color-option" data-color="#8B0000" style="background: #8B0000" title="深红色"></div>
+                            <div class="color-option" data-color="#A0522D" style="background: #A0522D" title="棕色"></div>
+                            <div class="color-option" data-color="#2F4F4F" style="background: #2F4F4F" title="深灰色"></div>
+                        </div>
+                        <div class="custom-color">
+                            <label>自定义HEX</label>
+                            <input type="color" id="customColor" value="#FF6B6B">
+                            <input type="text" id="customColorText" placeholder="#FF6B6B" maxlength="7">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">保存</button>
+                    <button type="button" id="deleteSubjectBtn" class="btn danger" style="display: none;">删除</button>
+                    <button type="button" id="cancelBtn" class="btn secondary">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 时间编辑弹窗 -->
+    <div id="timeModal" class="modal">
+        <div class="modal-content">
+            <h3>修改节数</h3>
+            <form id="timeForm">
+                <div class="form-group">
+                    <label>节数名称</label>
+                    <input type="text" id="periodName" required placeholder="第1节">
+                </div>
+                <div class="form-group">
+                    <label>开始时间</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="startHour" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="">时</option>
+                        </select>
+                        <span>:</span>
+                        <select id="startMinute" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="">分</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>结束时间</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="endHour" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="">时</option>
+                        </select>
+                        <span>:</span>
+                        <select id="endMinute" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="">分</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">保存</button>
+                    <button type="button" id="cancelTimeBtn" class="btn secondary">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 教程弹窗 -->
+    <div id="tutorialModal" class="modal" style="background: rgba(0, 0, 0, 0.7);" onclick="if(event.target===this)app.closeTutorialModal()">
+        <div class="modal-content" style="max-width: 800px; max-height: 85vh; overflow-y: auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); margin: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 20px 25px 15px; margin: 0 -25px 20px;">
+                <h3 style="margin: 0; font-size: 24px; color: #333;">📚 课程表使用教程</h3>
+                <button onclick="app.closeTutorialModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s;" onmouseover="this.style.background='#f5f5f5'; this.style.color='#333';" onmouseout="this.style.background='none'; this.style.color='#999';">×</button>
+            </div>
+            <div class="tutorial-content" style="text-align: left; line-height: 1.8; font-size: 16px; color: #555;">
+                <h4>📋 基础操作指南</h4>
+                <p><strong>1. 添加科目：</strong></p>
+                <ul>
+                    <li>点击"科目池"右上角的 "+ 科目" 按钮</li>
+                    <li>输入科目名称（如：数学、语文等）</li>
+                    <li>选择喜欢的颜色，点击保存即可添加</li>
+                </ul>
+
+                <p><strong>2. 编辑科目：</strong></p>
+                <ul>
+                    <li>在科目池中点击任意科目卡片上的 ✏️ 图标</li>
+                    <li>可以修改科目名称、老师姓名和颜色</li>
+                    <li>点击保存完成修改</li>
+                </ul>
+
+                <p><strong>3. 删除科目：</strong></p>
+                <ul>
+                    <li>点击科目卡片上的 🗑️ 图标直接删除</li>
+                    <li>删除科目会同时删除课程表中该科目的所有安排</li>
+                </ul>
+
+                <h4>🎯 排课操作</h4>
+                <p><strong>1. 拖拽排课：</strong></p>
+                <ul>
+                    <li>从左侧科目池拖拽任意科目到右侧课程表</li>
+                    <li>可以拖到任意时间段的任意格子</li>
+                    <li>同一科目可以多次使用</li>
+                </ul>
+
+                <p><strong>2. 删除课程：</strong></p>
+                <ul>
+                    <li>点击课程表中的任意课程卡片</li>
+                    <li>点击出现的 🗑️ 图标直接删除</li>
+                    <li>或者双击课程卡片直接删除</li>
+                </ul>
+
+                <h4>⏰ 时间设置</h4>
+                <p><strong>1. 调整节数：</strong></p>
+                <ul>
+                    <li>使用左侧"上午节数"和"下午节数"的 + - 按钮</li>
+                    <li>+ 添加一节，- 删除一节</li>
+                    <li>会自动在课程表中添加或删除对应时间段</li>
+                </ul>
+
+                <p><strong>2. 修改时间：</strong></p>
+                <ul>
+                    <li>点击课程表中的"时间"列的任意时间段</li>
+                    <li>可以修改节数名称（如：第1节、早读等）</li>
+                    <li>使用下拉菜单选择开始和结束时间</li>
+                    <li>点击保存完成修改</li>
+                </ul>
+
+                <h4>💾 保存与分享</h4>
+                <p><strong>1. 保存课程表：</strong></p>
+                <ul>
+                    <li>所有操作都会自动保存到浏览器</li>
+                    <li>刷新页面不会丢失数据</li>
+                </ul>
+
+                <p><strong>2. 导出分享：</strong></p>
+                <ul>
+                    <li>点击顶部"保存图片"可以生成课程表图片</li>
+                    <li>支持导出Word文档和Excel表格</li>
+                    <li>可以修改课程表标题后再导出</li>
+                </ul>
+
+                <h4>🔄 重置功能</h4>
+                <p><strong>清空课程表：</strong></p>
+                <ul>
+                    <li>点击顶部的"重置课表"按钮</li>
+                    <li>会清空课程表内容但保留科目池</li>
+                    <li>可以重新安排课程</li>
+                </ul>
+
+                <h4>💡 使用技巧</h4>
+                <ul>
+                    <li><strong>颜色管理：</strong>为不同科目设置不同颜色，方便识别</li>
+                    <li><strong>批量操作：</strong>可以一次性添加多个科目，然后逐个安排</li>
+                    <li><strong>标题修改：</strong>点击顶部标题可以修改课程表名称</li>
+                </ul>
+            </div>
+            <div class="form-actions" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding: 20px 0 0; margin: 30px 0 10px;">
+                <div style="color: #999; font-size: 14px;">
+                    💡 按 <kbd style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-family: monospace;">ESC</kbd> 键也可以关闭
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" onclick="app.closeTutorialModal()" class="btn secondary" style="min-width: 100px;">关闭</button>
+                    <button type="button" id="closeTutorialBtn" class="btn primary" style="min-width: 120px;">我知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
